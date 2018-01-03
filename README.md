@@ -9,4 +9,5 @@ Użytkownik powinien mieć możliwość porównania wyników zwróconych przez k
 - dla zadanych genów.
 
 
-
+## Wymagane pakiety R
+install.packages("DT")
