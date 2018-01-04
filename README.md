@@ -11,3 +11,4 @@ Użytkownik powinien mieć możliwość porównania wyników zwróconych przez k
 
 ## Wymagane pakiety R
 install.packages("DT")
+install.packages("plotly")
