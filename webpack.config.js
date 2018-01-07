@@ -4,7 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 const isProduction = process.argv.indexOf('-p') >= 0;
-const outPath = Path.join(__dirname, './dist');
+const outPath = Path.join(__dirname, './build');
 const sourcePath = Path.join(__dirname, './src');
 
 module.exports = {
