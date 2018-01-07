@@ -15,7 +15,7 @@ export class Table extends React.Component<TableProps, TableState> {
         return <ReactTable
             data={rows}
             columns={this.getTableColumns()}
-            defaultPageSize={50}
+            defaultPageSize={10}
             className="-striped -highlight"
         />;
     }

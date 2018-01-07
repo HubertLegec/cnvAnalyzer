@@ -5,6 +5,8 @@ import {RootState} from "../reducers";
 import {Grid, Row} from "react-bootstrap";
 import {Table} from "../components/Table";
 import {CnvRow} from "../reducers/cnvRows";
+import {BarPlot} from "../components/BarPlot";
+import {FloatingBarPlot} from "../components/FloatingBarPlot";
 
 interface MainPageDataProps {
     rows: CnvRow[]
@@ -19,9 +21,12 @@ interface MainPageState {}
 export class MainPageUI extends React.Component<MainPageProps, MainPageState> {
     render() {
         const {rows} = this.props;
-        return <Grid>
-            <Row className="show-grid">
-                aaaa
+        return <Grid style={{paddingBottom: 30}}>
+            <Row>
+                <FloatingBarPlot data={rows}/>
+            </Row>
+            <Row>
+                <BarPlot cnvRows={rows}/>
             </Row>
             <Row>
                 <Table rows={rows}/>

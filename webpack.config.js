@@ -33,6 +33,11 @@ module.exports = {
     },
     module: {
         loaders: [
+            // .js for plotly
+            {
+                test: /\.js$/,
+                use: 'ify-loader'
+            },
             // .ts, .tsx
             {
                 test: /\.tsx?$/,
