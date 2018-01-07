@@ -45,21 +45,18 @@ module.exports = {
             },
             // css
             {
-                test: /\.css$/,
-                use: ExtractTextPlugin.extract({
-                    fallback: 'style-loader',
-                    use: [
-                        {
-                            loader: 'css-loader'
-                        },
-                        {
-                            loader: 'postcss-loader',
-                            options: {
-                                ident: 'postcss'
-                            }
+                test: /\.scss|.css$/,
+                use: [
+                    'style-loader',
+                    'css-loader',
+                    {
+                        loader: 'postcss-loader',
+                        options: {
+                            plugins: () => [require('autoprefixer')],
                         }
-                    ]
-                })
+                    },
+                    'sass-loader'
+                ]
             },
             // static assets
             {test: /\.html$/, use: 'html-loader'},
@@ -90,9 +87,6 @@ module.exports = {
         hot: true,
         stats: {
             warnings: false
-        },
-        proxy: {
-            '/api/**': { target: 'http://92.222.67.219:8080', secure: false }
         }
     },
     node: {
