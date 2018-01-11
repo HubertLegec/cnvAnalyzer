@@ -4,6 +4,12 @@ export enum CnvType {
     DELETION = "Deletion"
 }
 
+export interface StructureRow {
+    chromosome: string;
+    name: string;
+    // TODO
+}
+
 export interface CnvRow {
     id: number,
     chromosome: string;
@@ -16,6 +22,7 @@ export interface CnvRow {
 export interface CnvRowsStoreState {
     controlRows: CnvRow[];
     caseRows: CnvRow[];
+    structureRows: StructureRow[];
 }
 
 const initialState: CnvRowsStoreState = {
@@ -41,7 +48,8 @@ const initialState: CnvRowsStoreState = {
         end: 50,
         type: CnvType.DELETION,
         source: "Control"
-    }]
+    }],
+    structureRows: []
 };
 
 export default function (state: CnvRowsStoreState = initialState, action: any) {

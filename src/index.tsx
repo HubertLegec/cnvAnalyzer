@@ -10,6 +10,7 @@ import {applyMiddleware, createStore, Store} from "redux";
 import rootReducer, {RootState} from "./reducers/index";
 import {App} from "./containers/App";
 import {NavBar} from "./components/NavBar";
+import {StartPage} from "./containers/StartPage";
 
 function configureStore(history, initialState?: RootState) {
     let middleware = applyMiddleware(routerMiddleware(history));
@@ -35,7 +36,8 @@ ReactDOM.render(
             <NavBar/>
             <ConnectedRouter history={history}>
                 <Switch>
-                    <Route path="/" exact component={MainPage}/>
+                    <Route path="/" exact component={StartPage}/>
+                    <Route path="/main" exact component={MainPage}/>
                 </Switch>
             </ConnectedRouter>
         </App>
