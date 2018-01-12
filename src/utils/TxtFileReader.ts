@@ -20,4 +20,8 @@ export class TxtFileReader {
             this.reader.readAsText(this.file);
         });
     }
+
+    protected getFileName(): string {
+        return this.file.name;
+    }
 }

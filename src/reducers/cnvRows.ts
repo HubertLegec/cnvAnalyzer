@@ -1,17 +1,25 @@
+import * as _ from "lodash";
 
 export enum CnvType {
     DUPLICATION = "Duplication",
     DELETION = "Deletion"
 }
 
+export interface ExonDef {
+    start: number;
+    end: number;
+}
+
 export interface StructureRow {
+    bin: number;
     chromosome: string;
     name: string;
-    // TODO
+    exons: ExonDef[];
 }
 
 export interface CnvRow {
-    id: number,
+    bin: number;
+    name: string;
     chromosome: string;
     start: number;
     end: number;
@@ -20,40 +28,30 @@ export interface CnvRow {
 }
 
 export interface CnvRowsStoreState {
-    controlRows: CnvRow[];
-    caseRows: CnvRow[];
+    loadedCnvRows: string[];
+    structureRowsLoaded: boolean;
+}
+
+export interface DataContainer {
     structureRows: StructureRow[];
+    cnvRows: CnvRow[];
 }
 
 const initialState: CnvRowsStoreState = {
-    controlRows: [{
-        id: 1,
-        chromosome: "chr1",
-        start: 30,
-        end: 50,
-        type: CnvType.DELETION,
-        source: "Case"
-    }, {
-        id: 2,
-        chromosome: "chr1",
-        start: 130,
-        end: 250,
-        type: CnvType.DUPLICATION,
-        source: "Case"
-    }],
-    caseRows: [{
-        id: 3,
-        chromosome: "chr2",
-        start: 30,
-        end: 50,
-        type: CnvType.DELETION,
-        source: "Control"
-    }],
-    structureRows: []
+    loadedCnvRows: [],
+    structureRowsLoaded: false
 };
 
 export default function (state: CnvRowsStoreState = initialState, action: any) {
     switch (action.type) {
+        case "STRUCTURE_ROWS_LOADED":
+            return _.assign({}, state, {
+               structureRowsLoaded: true
+            });
+        case "CNV_ROWS_LOADED":
+            return _.assign({}, state, {
+               loadedCnvRows: [...state.loadedCnvRows, action.loadedType]
+            });
         default:
             return state;
     }

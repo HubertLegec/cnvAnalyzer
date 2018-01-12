@@ -7,6 +7,7 @@ import {Table} from "../components/Table";
 import {CnvRow} from "../reducers/cnvRows";
 import {BarPlot} from "../components/BarPlot";
 import {FloatingBarPlot} from "../components/FloatingBarPlot";
+import {dataContainer} from "./App";
 
 interface MainPageDataProps {
     rows: CnvRow[]
@@ -36,9 +37,9 @@ export class MainPageUI extends React.Component<MainPageProps, MainPageState> {
 }
 
 function mapStateToProps(state: RootState): MainPageDataProps {
-    const {caseRows, controlRows} = state.cnvRows;
+    const {structureRowsLoaded, loadedCnvRows} = state.cnvRows;
     return {
-        rows: [...caseRows, ...controlRows]
+        rows: dataContainer.cnvRows
     };
 }
 

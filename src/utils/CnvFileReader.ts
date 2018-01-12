@@ -2,7 +2,7 @@ import {TxtFileReader} from "./TxtFileReader";
 import * as _ from "lodash";
 import {CnvRow, CnvType} from "../reducers/cnvRows";
 
-class CnvFileReader extends TxtFileReader {
+export class CnvFileReader extends TxtFileReader {
 
     async getCnvRows(): Promise<CnvRow[]> {
         return this.readFile()
@@ -10,20 +10,47 @@ class CnvFileReader extends TxtFileReader {
     }
 
     private mapRowsToObjects(rows: string[]): CnvRow[] {
+        const sourceName = this.getSourceName();
         return _.chain(rows)
-            .map(r => this.mapFileRowToObject(r))
+            .map(_.trim)
+            .filter(r => !_.isEmpty(r))
+            .map(r => this.mapFileRowToObject(r, sourceName))
             .value();
     }
 
-    private mapFileRowToObject(row: string): CnvRow {
-        // TODO
+    private mapFileRowToObject(row: string, sourceName: string): CnvRow {
+        const splitRow = _.split(row, "\t");
+        const additionalParams = _.dropRight(_.split(splitRow[11], ","));
+        const type_name = _.last(additionalParams);
         return {
-            id: 1,
-            chromosome: "chr1",
-            start: 100,
-            end: 120,
-            type: CnvType.DUPLICATION,
-            source: "control"
+            bin: _.toInteger(splitRow[0]),
+            name: splitRow[4],
+            chromosome: splitRow[1],
+            start: _.toInteger(splitRow[2]),
+            end: _.toInteger(splitRow[3]),
+            type: this.getTypeByName(type_name),
+            source: sourceName
+        }
+    }
+
+    public getSourceName(): string {
+        const filename = _.toLower(this.getFileName());
+        if (_.endsWith(filename, "control.txt")) {
+            return "Control";
+        } else if (_.endsWith(filename, "case.txt")) {
+            return "Case";
+        }
+        return "Unknown";
+    }
+
+    private getTypeByName(name: string): CnvType {
+        switch (name) {
+            case "copy_number_loss":
+                return CnvType.DELETION;
+            case "copy_number_gain":
+                return CnvType.DUPLICATION;
+            default:
+                throw new Error("Unknown type name: " + name);
         }
     }
 }
