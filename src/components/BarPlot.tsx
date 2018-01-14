@@ -2,7 +2,7 @@ import * as _ from "lodash";
 import * as React from "react";
 import * as Plot from "react-plotly.js"
 import * as Dimensions from 'react-dimensions'
-import {CnvRow} from "../reducers/cnvRows";
+import {CnvRow, StructureRow} from "../reducers/cnvRows";
 
 export interface BarPlotDataItem {
     id: number;
@@ -12,6 +12,7 @@ export interface BarPlotDataItem {
 
 interface BarPlotProps {
     cnvRows: CnvRow[];
+    structureRows: StructureRow[];
 }
 
 interface BarPlotState {
@@ -44,8 +45,8 @@ class BarPlotUI extends React.Component<BarPlotProps, BarPlotState> {
     }
 
     private calculateDeletionsAndDuplications(): BarPlotDataItem[] {
-        const {cnvRows} = this.props;
-        // TODO
+        const {cnvRows, structureRows} = this.props;
+        // TODO - tu już można korzystać z structureRows przekazanych w propsach
         return [{
             id: 1,
             deletions: 2,
