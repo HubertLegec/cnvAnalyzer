@@ -30,6 +30,9 @@ export interface CnvRow {
 export interface CnvRowsStoreState {
     loadedCnvRows: string[];
     structureRowsLoaded: boolean;
+    selectedChromosome: string;
+    startPosition: number;
+    endPosition: number;
 }
 
 export interface DataContainer {
@@ -39,7 +42,10 @@ export interface DataContainer {
 
 const initialState: CnvRowsStoreState = {
     loadedCnvRows: [],
-    structureRowsLoaded: false
+    structureRowsLoaded: false,
+    selectedChromosome: undefined,
+    startPosition: 800000,
+    endPosition: 1000000
 };
 
 export default function (state: CnvRowsStoreState = initialState, action: any) {
@@ -51,6 +57,10 @@ export default function (state: CnvRowsStoreState = initialState, action: any) {
         case "CNV_ROWS_LOADED":
             return _.assign({}, state, {
                loadedCnvRows: [...state.loadedCnvRows, action.loadedType]
+            });
+        case "CHROMOSOME_SELECTED":
+            return _.assign({}, state, {
+                selectedChromosome: action.chromosome
             });
         default:
             return state;

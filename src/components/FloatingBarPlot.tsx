@@ -35,7 +35,7 @@ class FloatingBarPlotUI extends React.Component<FloatingBarPlotProps, FloatingBa
             type: 'bar',
             base: _.map(data, e => e.start),
             x: _.map(data, e => e.end - e.start),
-            y: _.map(data, e => e.chromosome), // TODO - change to appropriate name
+            y: _.map(data, e => e.bin), // TODO - change to appropriate name
             orientation: 'h'
         }
     }
