@@ -1,6 +1,20 @@
 import {TxtFileReader} from "./TxtFileReader";
 import * as _ from "lodash";
-import {CnvRow, CnvType} from "../reducers/cnvRows";
+
+
+export enum CnvType {
+    DUPLICATION = "Duplication",
+    DELETION = "Deletion"
+}
+
+export interface CnvRow {
+    name: string;
+    chromosome: string;
+    start: number;
+    end: number;
+    type: CnvType;
+    source: string;
+}
 
 export class CnvFileReader extends TxtFileReader {
 

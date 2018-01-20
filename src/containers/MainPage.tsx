@@ -4,24 +4,30 @@ import {connect} from "react-redux";
 import {RootState} from "../reducers";
 import {Col, Grid, Row} from "react-bootstrap";
 import {Table} from "../components/Table";
-import {CnvRow, StructureRow} from "../reducers/cnvRows";
 import {BarPlot} from "../components/BarPlot";
 import {FloatingBarPlot} from "../components/FloatingBarPlot";
 import {dataContainer} from "./App";
-import Select from "react-select";
 import {ChromosomeSelector} from "../components/ChromosomeSelector";
+import {DataTrackSelector} from "../components/DataTrackSelector";
+import {RangeSelector} from "../components/RangeSelector";
+import {ExonDeletionsDuplications} from "../model/ExonDeletionsDuplications";
+import {StructureRow} from "../utils/StructureFileReader";
+import {CnvRow} from "../utils/CnvFileReader";
 
 interface MainPageDataProps {
     rows: CnvRow[];
-    structureRows: StructureRow[];
+    deletionsDuplications: ExonDeletionsDuplications[];
     startPosition: number;
     endPosition: number;
     selectedChromosome: string;
     chromosomes: string[];
+    tracks: string[];
+    selectedTrack: string;
 }
 
 interface MainPageEventProps {
-    onChangeChromosome: (chromosome: string) => void
+    onChangeChromosome: (chromosome: string) => void;
+    onChangeTrack: (track: string) => void;
 }
 
 type MainPageProps = MainPageDataProps & MainPageEventProps;
@@ -30,28 +36,45 @@ interface MainPageState {}
 
 export class MainPageUI extends React.Component<MainPageProps, MainPageState> {
     render() {
-        const {rows, startPosition, endPosition, selectedChromosome, chromosomes, onChangeChromosome} = this.props;
+        const {
+            rows, startPosition, endPosition, selectedChromosome, chromosomes, onChangeChromosome,
+            tracks, selectedTrack, onChangeTrack, deletionsDuplications
+        } = this.props;
         const filteredCnvRows = this.getFilteredCnvRows();
-        const filteredStructRows = this.getFilteredStructureRows();
         return <Grid style={{paddingBottom: 30}}>
-            {/*<Row>
-                <FloatingBarPlot data={filteredCnvRows}/>
-            </Row>*/}
-            <Row>
-                <BarPlot cnvRows={filteredCnvRows}
-                         structureRows={filteredStructRows}
-                         startPosition={startPosition}
-                         endPosition={endPosition}/>
-            </Row>
-            <Row>
-                <Col xs={3} md={3}>
+            <Row style={{marginBottom: 30}}>
+                <Col xs={2} md={2} style={{verticalAlign: 'center', textAlign: 'right', fontSize: 16, marginTop: 5}}>
+                    Select chromosome
+                </Col>
+                <Col xs={4} md={4}>
                     <ChromosomeSelector selectedChromosome={selectedChromosome}
                                         chromosomes={chromosomes}
                                         onChange={onChangeChromosome}/>
                 </Col>
-                <Col xs={9} md={9}>
-
+                <Col xs={2} md={2} style={{verticalAlign: 'center', textAlign: 'right', fontSize: 16, marginTop: 5}}>
+                    Select data track
                 </Col>
+                <Col xs={4} md={4}>
+                    <DataTrackSelector tracks={tracks} selectedTrack={selectedTrack} onChange={onChangeTrack}/>
+                </Col>
+            </Row>
+            <Row style={{marginBottom: 20}}>
+                <Col xs={2} md={2} style={{verticalAlign: 'center', textAlign: 'right', fontSize: 16}}>
+                    Select positions range
+                </Col>
+                <Col xs={10} md={10}>
+                    <RangeSelector />
+                </Col>
+            </Row>
+            <Row>
+                <FloatingBarPlot data={filteredCnvRows}
+                                 startPosition={startPosition}
+                                 endPosition={endPosition}/>
+            </Row>
+            <Row>
+                <BarPlot data={deletionsDuplications}
+                         startPosition={startPosition}
+                         endPosition={endPosition}/>
             </Row>
             <Row style={{marginTop: 20}}>
                 <Table rows={rows}/>
@@ -60,34 +83,35 @@ export class MainPageUI extends React.Component<MainPageProps, MainPageState> {
     }
 
     private getFilteredCnvRows(): CnvRow[] {
-        const {selectedChromosome, startPosition, endPosition, rows} = this.props;
+        const {selectedChromosome, startPosition, endPosition, rows, selectedTrack} = this.props;
         return _.chain(rows)
             .filter(r => r.chromosome === selectedChromosome)
+            .filter(r => selectedTrack === r.source)
             .filter(r => r.start <= endPosition && r.end >= startPosition)
             .value();
-    }
-
-    private getFilteredStructureRows(): StructureRow[] {
-        const {selectedChromosome, structureRows} = this.props;
-        return _.filter(structureRows, r => r.chromosome === selectedChromosome);
     }
 }
 
 function mapStateToProps(state: RootState): MainPageDataProps {
-    const {startPosition, endPosition, selectedChromosome} = state.cnvRows;
-    const chromosomes = _.chain(dataContainer.structureRows)
-        .map(r => r.chromosome)
-        .uniq()
-        .sort()
-        .value();
+    const {cnvTracks} = state.cnvRows;
+    const {startPosition, endPosition, selectedChromosome, selectedTrack} = state.selection;
+    const chromosomes = dataContainer.chromosomes;
     const selChromosome = _.defaultTo(selectedChromosome, _.head(chromosomes));
+    const selTrack = _.defaultTo(selectedTrack, _.head(cnvTracks));
+    const minMax = dataContainer.getCnvsRange(selTrack, selChromosome);
+    const start = startPosition || minMax.min;
+    const maxRangeSize = 100000;
+    const end = endPosition || (minMax.min + maxRangeSize);
+    const deletionsDuplications = dataContainer.getDeletionsDuplications(selTrack, selChromosome, start, end);
     return {
         rows: dataContainer.cnvRows,
-        structureRows: dataContainer.structureRows,
-        startPosition,
-        endPosition,
+        startPosition: start,
+        endPosition: end,
         chromosomes: chromosomes,
-        selectedChromosome: selChromosome
+        selectedChromosome: selChromosome,
+        tracks: cnvTracks,
+        selectedTrack: selTrack,
+        deletionsDuplications
     };
 }
 
@@ -97,6 +121,12 @@ function mapDispatchToProps(dispatch): MainPageEventProps {
             dispatch({
                 type: 'CHROMOSOME_SELECTED',
                 chromosome
+            })
+        },
+        onChangeTrack(track: string) {
+            dispatch({
+                type: 'TRACK_SELECTED',
+                track
             })
         }
     };

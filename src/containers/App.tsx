@@ -1,12 +1,9 @@
 import * as React from "react";
-import {DataContainer} from "../reducers/cnvRows";
+import {DataContainer} from "../model/DataContainer";
 
 
 // Data from files needs to be keep in global variable, because Redux can't handle such amount of data
-export const dataContainer: DataContainer = {
-    structureRows: [],
-    cnvRows: []
-};
+export const dataContainer = new DataContainer();
 
 (window as any).dataContainer = dataContainer;
 

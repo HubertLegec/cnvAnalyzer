@@ -3,7 +3,6 @@ import * as React from "react";
 import {Button, ButtonToolbar, Col, Grid, Row} from "react-bootstrap";
 import {RootState} from "../reducers";
 import {connect} from "react-redux";
-
 import {push} from "react-router-redux";
 import DropzoneComponent from "react-dropzone-component";
 import "react-dropzone-component/styles/filepicker.css";
@@ -13,7 +12,8 @@ import {CnvFileReader} from "../utils/CnvFileReader";
 import {dataContainer} from "./App";
 
 interface StartPageDataProps {
-
+    structureLoaded: boolean;
+    cnvLoaded: boolean;
 }
 
 interface StartPageEventProps {
@@ -30,30 +30,41 @@ class StartPageUI extends React.Component<StartPageProps, StartPageState> {
     private config = {
         iconFiletypes: ['.txt'],
         showFiletypeIcon: true,
-        postUrl: 'no-url'
+        postUrl: 'no-url',
+        maxFiles: 2,
+        addRemoveLinks: true,
     };
     private djsConfig = { autoProcessQueue: false };
-    private strEventHandlers = { addedfile: (file) => this.onDropStructure(file) };
-    private cnvEventHandlers = { addedfile: (file) => this.onDropCnv(file)}
+    private strEventHandlers = {
+        addedfile: (file) => this.onDropStructure(file),
+        init: (dropzone) => this.structureDropzone = dropzone
+    };
+    private cnvEventHandlers = {
+        addedfile: (file) => this.onDropCnv(file),
+        init: (dropzone) => this.cnvDropzone = dropzone
+    };
+
+    private structureDropzone;
+    private cnvDropzone;
 
     render() {
-        const {onNextClick} = this.props;
+        const {onNextClick, structureLoaded, cnvLoaded} = this.props;
         return <Grid>
             <Row className="show-grid">
-                <Col md={6} mdPush={6}>
+                <Col xs={6} md={6}>
                     Structure file
                 </Col>
-                <Col md={6} mdPull={6}>
+                <Col xs={6} md={6}>
                     CNV data files
                 </Col>
             </Row>
             <Row className="show-grid">
-                <Col md={6} mdPush={6}>
+                <Col xs={6} md={6}>
                     <DropzoneComponent config={this.config}
                                        eventHandlers={this.strEventHandlers}
                                        djsConfig={this.djsConfig} />
                 </Col>
-                <Col md={6} mdPull={6}>
+                <Col xs={6} md={6}>
                     <DropzoneComponent config={this.config}
                                        eventHandlers={this.cnvEventHandlers}
                                        djsConfig={this.djsConfig} />
@@ -61,7 +72,9 @@ class StartPageUI extends React.Component<StartPageProps, StartPageState> {
             </Row>
             <Row className="show-grid" style={{marginTop: 20}}>
                 <ButtonToolbar>
-                    <Button bsStyle="primary" onClick={onNextClick}>Next</Button>
+                    <Button bsStyle="primary"
+                            disabled={!(structureLoaded && cnvLoaded)}
+                            onClick={onNextClick}>Next</Button>
                 </ButtonToolbar>
             </Row>
         </Grid>
@@ -72,11 +85,10 @@ class StartPageUI extends React.Component<StartPageProps, StartPageState> {
         const reader = new StructureFileReader(file);
         reader.getStructureRows()
             .then(rows => {
+                dataContainer.setStructureRows(rows);
                 console.log('structure loaded: ', _.size(rows));
-                dataContainer.structureRows = rows;
                 onStructureRowsLoaded();
-            }
-            );
+            });
     }
 
     private onDropCnv(file: File) {
@@ -84,8 +96,8 @@ class StartPageUI extends React.Component<StartPageProps, StartPageState> {
         const reader = new CnvFileReader(file);
         reader.getCnvRows()
             .then(rows => {
+                dataContainer.addCnvRows(rows, reader.getSourceName());
                 console.log('cnv loaded');
-                dataContainer.cnvRows = [...dataContainer.cnvRows, ...rows];
                 onCnvRowsLoaded(reader.getSourceName());
             })
     }
@@ -93,7 +105,11 @@ class StartPageUI extends React.Component<StartPageProps, StartPageState> {
 }
 
 function mapStateToProps(state: RootState): StartPageDataProps {
-    return {};
+    const {cnvRows} = state;
+    return {
+        structureLoaded: cnvRows.structureRowsLoaded,
+        cnvLoaded: !_.isEmpty(cnvRows.cnvTracks)
+    };
 }
 
 function mapDispatchToProps(dispatch): StartPageEventProps {
@@ -109,7 +125,7 @@ function mapDispatchToProps(dispatch): StartPageEventProps {
         onCnvRowsLoaded(type: string) {
             dispatch({
                 type: "CNV_ROWS_LOADED",
-                loadedType: type
+                track: type
             })
         }
     };

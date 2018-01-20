@@ -1,7 +1,7 @@
 import * as React from "react";
-import {CnvRow} from "../reducers/cnvRows";
 import ReactTable, {Column} from "react-table";
 import "react-table/react-table.css";
+import {CnvRow} from "../utils/CnvFileReader";
 
 interface TableProps {
     rows: CnvRow[];

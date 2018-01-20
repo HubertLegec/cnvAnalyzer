@@ -1,5 +1,5 @@
 
-export class BarPlotDataItem {
+export class ExonDeletionsDuplications {
     private exonStartPos: number;
     private exonEndPos: number;
     private deletionsCount: number;
