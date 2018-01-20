@@ -14,6 +14,7 @@ export class Table extends React.Component<TableProps, TableState> {
         const {rows} = this.props;
         return <ReactTable
             data={rows}
+            filterable={true}
             columns={this.getTableColumns()}
             defaultPageSize={10}
             className="-striped -highlight"
@@ -22,8 +23,8 @@ export class Table extends React.Component<TableProps, TableState> {
 
     private getTableColumns(): Column[] {
         return [{
-            Header: "Id",
-            accessor: "id"
+            Header: "Name",
+            accessor: "name"
         }, {
             Header: "Chromosome",
             accessor: "chromosome"

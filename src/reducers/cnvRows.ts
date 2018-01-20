@@ -18,7 +18,6 @@ export interface StructureRow {
 }
 
 export interface CnvRow {
-    bin: number;
     name: string;
     chromosome: string;
     start: number;

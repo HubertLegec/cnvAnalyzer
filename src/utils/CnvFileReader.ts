@@ -23,7 +23,6 @@ export class CnvFileReader extends TxtFileReader {
         const additionalParams = _.dropRight(_.split(splitRow[11], ","));
         const type_name = _.last(additionalParams);
         return {
-            bin: _.toInteger(splitRow[0]),
             name: splitRow[4],
             chromosome: splitRow[1],
             start: _.toInteger(splitRow[2]),
