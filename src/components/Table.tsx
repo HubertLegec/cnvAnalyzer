@@ -1,3 +1,4 @@
+import * as _ from "lodash";
 import * as React from "react";
 import ReactTable, {Column} from "react-table";
 import "react-table/react-table.css";
@@ -15,8 +16,13 @@ export class Table extends React.Component<TableProps, TableState> {
         return <ReactTable
             data={rows}
             filterable={true}
+            defaultFilterMethod={(filter, row) => {
+                const filterVal = _.toLower(_.toString(filter.value));
+                const val = _.toLower(_.toString(row[filter.id]));
+                return _.includes(val, filterVal);
+            }}
             columns={this.getTableColumns()}
-            defaultPageSize={10}
+            defaultPageSize={20}
             className="-striped -highlight"
         />;
     }
@@ -27,7 +33,8 @@ export class Table extends React.Component<TableProps, TableState> {
             accessor: "name"
         }, {
             Header: "Chromosome",
-            accessor: "chromosome"
+            accessor: "chromosome",
+            filterable: false
         }, {
             Header: "Start position",
             accessor: "start"

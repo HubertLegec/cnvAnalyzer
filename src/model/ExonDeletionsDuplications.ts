@@ -1,15 +1,16 @@
+import * as _ from "lodash";
 
 export class ExonDeletionsDuplications {
     private exonStartPos: number;
     private exonEndPos: number;
-    private deletionsCount: number;
-    private duplicationsCount: number;
+    private deletionsNames: string[];
+    private duplicationsNames: string[];
 
     constructor(exonStart: number, exonEnd: number) {
         this.exonStartPos = exonStart;
         this.exonEndPos = exonEnd;
-        this.deletionsCount = 0;
-        this.duplicationsCount = 0;
+        this.deletionsNames = [];
+        this.duplicationsNames = [];
     }
 
     get exonStart(): number {
@@ -25,18 +26,26 @@ export class ExonDeletionsDuplications {
     }
 
     get deletions(): number {
-        return this.deletionsCount;
+        return _.size(this.deletionsNames);
+    }
+
+    get deletionsText(): string {
+        return _.join(this.deletionsNames, "<br>");
     }
 
     get duplications(): number {
-        return this.duplicationsCount;
+        return _.size(this.duplicationsNames);
     }
 
-    addDuplication() {
-        this.duplicationsCount += 1;
+    get duplicationsText(): string {
+        return _.join(this.duplicationsNames, "<br>");
     }
 
-    addDeletion() {
-        this.deletionsCount += 1;
+    addDuplication(name: string) {
+        this.duplicationsNames.push(name);
+    }
+
+    addDeletion(name: string) {
+        this.deletionsNames.push(name);
     }
 }

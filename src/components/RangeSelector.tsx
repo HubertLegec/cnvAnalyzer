@@ -16,13 +16,13 @@ export class RangeSelector extends React.Component<RangeSelectorProps, RangeSele
     private step = 10000;
 
     render() {
-        const {value} = this.props;
+        const {value, minValue, maxValue} = this.props;
         return <Row>
             <Col xs={2} md={2} style={{verticalAlign: 'center', textAlign: 'right', fontSize: 16, marginTop: 15}}>
                 Move
             </Col>
             <Col xs={1} md={1} style={{marginTop: 10}}>
-                <Button onClick={() => this.onLeftClick()}>
+                <Button onClick={() => this.onLeftClick()} disabled={value.min === minValue}>
                     <Glyphicon glyph="glyphicon glyphicon-chevron-left"/>
                 </Button>
             </Col>
@@ -43,7 +43,7 @@ export class RangeSelector extends React.Component<RangeSelectorProps, RangeSele
                 </Form>
             </Col>
             <Col xs={1} md={1} style={{marginTop: 10}}>
-                <Button onClick={() => this.onRightClick()}>
+                <Button onClick={() => this.onRightClick()} disabled={value.max === maxValue}>
                     <Glyphicon glyph="glyphicon glyphicon-chevron-right"/>
                 </Button>
             </Col>

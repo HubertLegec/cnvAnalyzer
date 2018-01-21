@@ -87,7 +87,7 @@ export class DataContainer {
         _(cnvRows)
             .filter(r => r.start <= exon.end && r.end >= exon.start)
             .forEach(r =>
-                r.type === CnvType.DUPLICATION ? result.addDuplication() : result.addDeletion()
+                r.type === CnvType.DUPLICATION ? result.addDuplication(r.name) : result.addDeletion(r.name)
             );
         return result;
     }

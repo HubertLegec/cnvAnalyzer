@@ -25,6 +25,6 @@ export class FloatingBarPlotDataItem {
     }
 
     get hoverText(): string {
-        return `Start position: ${this.startPos}\nEnd position: ${this.startPos + this.length}`;
+        return `Start position: ${this.startPos}<br>End position: ${this.startPos + this.length}`;
     }
 }

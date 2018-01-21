@@ -8,13 +8,16 @@ import {CnvRow} from "../utils/CnvFileReader";
 
 interface FloatingBarPlotProps {
     data: CnvRow[];
+    startPosition: number;
+    endPosition: number;
+    containerWidth: number;
 }
 
 interface FloatingBarPlotState {}
 
 class FloatingBarPlotUI extends React.Component<FloatingBarPlotProps, FloatingBarPlotState> {
     render() {
-        const containerWidth = (this.props as any).containerWidth;
+        const {containerWidth, startPosition, endPosition} = this.props;
         const items = this.getPlotItems();
         return <Plot
             data={[
@@ -22,7 +25,10 @@ class FloatingBarPlotUI extends React.Component<FloatingBarPlotProps, FloatingBa
             ]}
             layout={{
                 width: containerWidth,
-                height: this.getPlotHeight(items)
+                height: this.getPlotHeight(items),
+                xaxis: {
+                    range: [startPosition, endPosition]
+                }
             }}
         />;
     }
