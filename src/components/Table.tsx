@@ -6,13 +6,14 @@ import {CnvRow} from "../utils/CnvFileReader";
 
 interface TableProps {
     rows: CnvRow[];
+    onRowClicked: (row: CnvRow) => void;
 }
 
 interface TableState {}
 
 export class Table extends React.Component<TableProps, TableState> {
     render() {
-        const {rows} = this.props;
+        const {rows, onRowClicked} = this.props;
         return <ReactTable
             data={rows}
             filterable={true}
@@ -24,6 +25,14 @@ export class Table extends React.Component<TableProps, TableState> {
             columns={this.getTableColumns()}
             defaultPageSize={20}
             className="-striped -highlight"
+            getTdProps={(state, rowInfo, column, instance) => ({
+                onClick: (e, handleOriginal) => {
+                    onRowClicked(rowInfo.row);
+                    if (handleOriginal) {
+                        handleOriginal();
+                    }
+                }
+            })}
         />;
     }
 

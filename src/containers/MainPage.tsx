@@ -20,7 +20,9 @@ interface MainPageDataProps {
     selectedTrack: string;
 }
 
-interface MainPageEventProps {}
+interface MainPageEventProps {
+    onRowClicked: (row: CnvRow) => void;
+}
 
 type MainPageProps = MainPageDataProps & MainPageEventProps;
 
@@ -29,7 +31,7 @@ interface MainPageState {}
 export class MainPageUI extends React.Component<MainPageProps, MainPageState> {
     render() {
         const {
-            rows, startPosition, endPosition, deletionsDuplications
+            rows, startPosition, endPosition, deletionsDuplications, onRowClicked
         } = this.props;
         const filteredCnvRows = this.getFilteredCnvRows();
         return <Grid style={{paddingBottom: 30}}>
@@ -45,7 +47,7 @@ export class MainPageUI extends React.Component<MainPageProps, MainPageState> {
                          endPosition={endPosition}/>
             </Row>
             <Row style={{marginTop: 20}}>
-                <Table rows={rows}/>
+                <Table rows={rows} onRowClicked={onRowClicked}/>
             </Row>
         </Grid>
     }
@@ -82,7 +84,14 @@ function mapStateToProps(state: RootState): MainPageDataProps {
 }
 
 function mapDispatchToProps(dispatch): MainPageEventProps {
-    return {};
+    return {
+        onRowClicked(row: CnvRow) {
+            dispatch({
+                type: "TABLE_ROW_CLICKED",
+                row
+            });
+        }
+    };
 }
 
 export const MainPage = connect(

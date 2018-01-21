@@ -1,4 +1,5 @@
 import * as _ from "lodash";
+import {CnvRow} from "../utils/CnvFileReader";
 
 
 export interface SelectionStoreState {
@@ -33,6 +34,14 @@ export default function (state: SelectionStoreState = initialState, action: any)
             return _.assign({}, state, {
                 startPosition: action.position.min,
                 endPosition: action.position.max
+            });
+        case "TABLE_ROW_CLICKED":
+            const row: CnvRow = action.row;
+            return _.assign({}, state, {
+                selectedTrack: row.source,
+                selectedChromosome: row.chromosome,
+                startPosition: row.start,
+                endPosition: row.end - row.start < 50000 ? row.end : row.start + 50000
             });
         default:
             return state;
