@@ -86,7 +86,6 @@ export class DataContainer {
         const result = new ExonDeletionsDuplications(exon.start, exon.end);
         _(cnvRows)
             .filter(r => r.start <= exon.end && r.end >= exon.start)
-            .filter(r => r.chromosome === exon.chromosome)
             .forEach(r =>
                 r.type === CnvType.DUPLICATION ? result.addDuplication() : result.addDeletion()
             );
