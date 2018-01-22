@@ -74,12 +74,35 @@ export class DataContainer {
     }
 
     private calculateDeletionsAndDuplications(cnvRows: CnvRow[], chromosome: string, minPos: number, maxPos: number): ExonDeletionsDuplications[] {
-        return _.chain(this.getStructureRows(chromosome))
+        
+        var dnd =  _.chain(this.getStructureRows(chromosome))
             .map(r => r.exons)
             .flatten()
+            .uniqBy(e => "" + e.start + "-" + e.end)            
             .filter(e => e.start <= maxPos && e.end >= minPos)
             .map(e => this.calculateDeletionsAndDuplicationsForExon(e, cnvRows))
             .value();
+
+
+        return _.chain(dnd)
+            .filter(e => this.barNoOverlap(e, dnd))
+            .value();
+    }
+
+    private barNoOverlap(exon : ExonDeletionsDuplications, otherExons : ExonDeletionsDuplications[]){
+        var noOverlap = true;
+        otherExons.forEach(e => {
+            //bar inside another
+            if(exon.exonStart > e.exonStart && exon.exonEnd < e.exonEnd) 
+                noOverlap =false;
+            //smaller bar overlaping bigger one from the left
+            if (exon.exonEnd >= e.exonStart && exon.exonStart < e.exonStart && exon.exonEnd - exon.exonStart < e.exonEnd - e.exonStart) 
+                noOverlap = false;
+            //smaller bar overlaping bigger one from the right
+            if (exon.exonStart <= e.exonEnd && exon.exonEnd > e.exonEnd && exon.exonEnd - exon.exonStart < e.exonEnd - e.exonStart)
+                noOverlap = false;
+        })
+        return noOverlap;
     }
 
     private calculateDeletionsAndDuplicationsForExon(exon: ExonDef, cnvRows: CnvRow[]): ExonDeletionsDuplications {

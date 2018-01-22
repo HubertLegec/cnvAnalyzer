@@ -37,6 +37,7 @@ class BarPlotUI extends React.Component<BarPlotProps, BarPlotState> {
         return {
             x: _.map(data, e => e.exonCenter),
             y: _.map(data, e => fieldName === 'deletions' ?  -e[fieldName] : e[fieldName]),
+            width: _.map(data, e => e.exonEnd - e.exonStart),
             text: _.map(data, e => e[`${fieldName}Text`]),
             name: traceName,
             type: 'bar'
