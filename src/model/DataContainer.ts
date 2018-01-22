@@ -74,12 +74,19 @@ export class DataContainer {
     }
 
     private calculateDeletionsAndDuplications(cnvRows: CnvRow[], chromosome: string, minPos: number, maxPos: number): ExonDeletionsDuplications[] {
-        return _.chain(this.getStructureRows(chromosome))
+        
+        var dnd =  _.chain(this.getStructureRows(chromosome))
             .map(r => r.exons)
             .flatten()
+            .uniqBy(e => "" + e.start + "-" + e.end)            
             .filter(e => e.start <= maxPos && e.end >= minPos)
             .map(e => this.calculateDeletionsAndDuplicationsForExon(e, cnvRows))
             .value();
+
+        dnd.filter(e => 
+            dnd.forEach(e2 => e.exonEnd < e2.exonStart || e.exonStart > e2.exonEnd || (e.exonStart < e2.exonStart && e.exonEnd > e2.exonEnd)))
+           
+        return dnd;
     }
 
     private calculateDeletionsAndDuplicationsForExon(exon: ExonDef, cnvRows: CnvRow[]): ExonDeletionsDuplications {
