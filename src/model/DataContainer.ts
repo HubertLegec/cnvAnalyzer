@@ -73,16 +73,15 @@ export class DataContainer {
             .value();
     }
 
-    private calculateDeletionsAndDuplications(cnvRows: CnvRow[], chromosome: string, minPos: number, maxPos: number): ExonDeletionsDuplications[] {
-        
+    private calculateDeletionsAndDuplications(cnvRows: CnvRow[], chromosome: string, minPos: number, maxPos: number): ExonDeletionsDuplications[] {        
         var dnd =  _.chain(this.getStructureRows(chromosome))
             .map(r => r.exons)
             .flatten()
             .uniqBy(e => "" + e.start + "-" + e.end)            
+
             .filter(e => e.start <= maxPos && e.end >= minPos)
             .map(e => this.calculateDeletionsAndDuplicationsForExon(e, cnvRows))
             .value();
-
 
         return _.chain(dnd)
             .filter(e => this.barNoOverlap(e, dnd))
@@ -103,6 +102,7 @@ export class DataContainer {
                 noOverlap = false;
         })
         return noOverlap;
+
     }
 
     private calculateDeletionsAndDuplicationsForExon(exon: ExonDef, cnvRows: CnvRow[]): ExonDeletionsDuplications {
