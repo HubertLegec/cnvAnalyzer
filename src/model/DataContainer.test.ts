@@ -138,6 +138,20 @@ const delDuplCnvRows: CnvRow[] = [{
     start: 90,
     end: 1000,
     type: CnvType.DUPLICATION
+}, {
+    chromosome: "chr1",
+    name: "n3",
+    source: "Case",
+    start: 130,
+    end: 400,
+    type: CnvType.DELETION
+}, {
+    chromosome: "chr1",
+    name: "n4",
+    source: "Case",
+    start: 500,
+    end: 1000,
+    type: CnvType.DUPLICATION
 }];
 
 test("bars no overlap", () => {
@@ -154,8 +168,16 @@ test("get deletions and duplications", () => {
     const container = new DataContainer();
     container.setStructureRows(delDuplStructRows);
     container.addCnvRows(delDuplCnvRows, "Case");
-    expect(
-        container.getDeletionsDuplications("Control", "chr1", 10, 10000)
-    ).toHaveLength(4);
-    //expect(dataContainer.getDeletionsDuplications("Case", "chr1", 50, 2000)).toHaveLength(2);
+
+    const controlDelDupl = container.getDeletionsDuplications("Control", "chr1", 10, 10000);
+    expect(controlDelDupl).toHaveLength(4);
+    expect(_.map(controlDelDupl, c => c.deletions)).toEqual([0, 0, 0, 0]);
+    expect(_.map(controlDelDupl, c => c.duplications)).toEqual([0, 0, 0, 0]);
+
+    const caseDelDupl = container.getDeletionsDuplications("Case", "chr1", 10, 10000);
+    expect(caseDelDupl).toHaveLength(4);
+    expect(caseDelDupl[0].duplications).toBe(2);
+    expect(caseDelDupl[0].deletions).toBe(1);
+    expect(caseDelDupl[3].duplications).toBe(0);
+    expect(caseDelDupl[3].deletions).toBe(0);
 });

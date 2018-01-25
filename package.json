@@ -80,6 +80,12 @@
       "^.+\\.tsx?$": "ts-jest"
     },
     "testRegex": "(\\.|/)test\\.tsx?$",
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "**/*.{ts,tsx}",
+      "!**/node_modules/**",
+      "!**/vendor/**"
+    ],
     "moduleFileExtensions": [
       "ts",
       "tsx",

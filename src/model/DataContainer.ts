@@ -87,21 +87,15 @@ export class DataContainer {
     }
 
     static barNoOverlap(exon: ExonDeletionsDuplications, otherExons: ExonDeletionsDuplications[]) {
-        let noOverlap = true;
-        otherExons.forEach(e => {
+        return !_.some(otherExons,e =>
             //bar inside another
-            if(exon.exonStart >= e.exonStart && exon.exonEnd < e.exonEnd)
-                noOverlap =false;
-            if(exon.exonStart > e.exonStart && exon.exonEnd <= e.exonEnd)
-                noOverlap =false;
+            (exon.exonStart >= e.exonStart && exon.exonEnd < e.exonEnd) ||
+            (exon.exonStart > e.exonStart && exon.exonEnd <= e.exonEnd) ||
             //smaller bar overlaping bigger one from the left
-            if (exon.exonEnd >= e.exonStart && exon.exonStart < e.exonStart && exon.exonEnd - exon.exonStart < e.exonEnd - e.exonStart)
-                noOverlap = false;
+            (exon.exonEnd >= e.exonStart && exon.exonStart < e.exonStart && exon.exonEnd - exon.exonStart < e.exonEnd - e.exonStart) ||
             //smaller bar overlaping bigger one from the right
-            if (exon.exonStart <= e.exonEnd && exon.exonEnd > e.exonEnd && exon.exonEnd - exon.exonStart < e.exonEnd - e.exonStart)
-                noOverlap = false;
-        });
-        return noOverlap;
+            (exon.exonStart <= e.exonEnd && exon.exonEnd > e.exonEnd && exon.exonEnd - exon.exonStart < e.exonEnd - e.exonStart)
+        );
     }
 
     private calculateDeletionsAndDuplicationsForExon(exon: ExonDef, cnvRows: CnvRow[]): ExonDeletionsDuplications {
