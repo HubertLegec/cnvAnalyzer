@@ -22,7 +22,7 @@ export class Table extends React.Component<TableProps, TableState> {
                 const val = _.toLower(_.toString(row[filter.id]));
                 return _.includes(val, filterVal);
             }}
-            columns={this.getTableColumns()}
+            columns={Table.getTableColumns()}
             defaultPageSize={20}
             className="-striped -highlight"
             getTdProps={(state, rowInfo, column, instance) => ({
@@ -36,7 +36,7 @@ export class Table extends React.Component<TableProps, TableState> {
         />;
     }
 
-    private getTableColumns(): Column[] {
+    private static getTableColumns(): Column[] {
         return [{
             Header: "Name",
             accessor: "name"
