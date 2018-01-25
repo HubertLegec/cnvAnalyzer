@@ -90,7 +90,9 @@ export class DataContainer {
         let noOverlap = true;
         otherExons.forEach(e => {
             //bar inside another
-            if(exon.exonStart > e.exonStart && exon.exonEnd < e.exonEnd)
+            if(exon.exonStart >= e.exonStart && exon.exonEnd < e.exonEnd)
+                noOverlap =false;
+            if(exon.exonStart > e.exonStart && exon.exonEnd <= e.exonEnd)
                 noOverlap =false;
             //smaller bar overlaping bigger one from the left
             if (exon.exonEnd >= e.exonStart && exon.exonStart < e.exonStart && exon.exonEnd - exon.exonStart < e.exonEnd - e.exonStart)

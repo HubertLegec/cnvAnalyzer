@@ -1,5 +1,4 @@
 import * as React from "react";
-import 'rc-slider/assets/index.css';
 import {Button, Col, ControlLabel, Form, FormControl, FormGroup, Glyphicon, Row} from "react-bootstrap";
 
 interface RangeSelectorProps {
