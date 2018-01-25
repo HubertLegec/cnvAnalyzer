@@ -42,8 +42,7 @@ export class Table extends React.Component<TableProps, TableState> {
             accessor: "name"
         }, {
             Header: "Chromosome",
-            accessor: "chromosome",
-            filterable: false
+            accessor: "chromosome"
         }, {
             Header: "Start position",
             accessor: "start"
