@@ -7,7 +7,7 @@ export class TxtFileReader {
         this.file = file;
     }
 
-    protected readFile(): Promise<string[]> {
+    readFile(): Promise<string[]> {
         return new Promise((resolve, reject) => {
             this.reader.onload = (event) => {
                 const file = (event.target as any).result;
@@ -21,7 +21,7 @@ export class TxtFileReader {
         });
     }
 
-    protected getFileName(): string {
+    getFileName(): string {
         return this.file.name;
     }
 }
