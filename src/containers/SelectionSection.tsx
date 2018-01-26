@@ -50,7 +50,12 @@ class SelectionSectionUI extends React.Component<SelectionSectionProps, {}> {
                     <DataTrackSelector tracks={tracks} selectedTrack={selectedTrack} onChange={onChangeTrack}/>
                 </Col>
             </Row>,
-            <RangeSelector minValue={minValue} maxValue={maxValue} value={value} maxRangeSize={maxRangeSize} onChange={onChangeRange}/>
+            <RangeSelector key={1}
+                           minValue={minValue}
+                           maxValue={maxValue}
+                           value={value}
+                           maxRangeSize={maxRangeSize}
+                           onChange={onChangeRange}/>
         ]
     }
 }

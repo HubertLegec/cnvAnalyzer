@@ -30,6 +30,11 @@ export class ExonDeletionsDuplications {
     }
 
     get deletionsText(): string {
+        if (_.size(this.deletionsNames) > 5) {
+            return _(this.deletionsNames)
+                .take(5)
+                .join("<br>") + "...";
+        }
         return _.join(this.deletionsNames, "<br>");
     }
 
@@ -38,6 +43,11 @@ export class ExonDeletionsDuplications {
     }
 
     get duplicationsText(): string {
+        if (_.size(this.duplicationsNames) > 5) {
+            return _(this.duplicationsNames)
+                .take(5)
+                .join("<br>") + "..."
+        }
         return _.join(this.duplicationsNames, "<br>");
     }
 

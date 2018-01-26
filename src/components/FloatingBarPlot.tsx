@@ -3,7 +3,7 @@ import * as React from "react";
 import * as Plot from "react-plotly.js"
 import * as Dimensions from 'react-dimensions'
 import {FloatingBarPlotDataItem} from "../model/FloatingBarPlotDataItem";
-import {CnvRow} from "../utils/CnvFileReader";
+import {CnvRow, CnvType} from "../utils/CnvFileReader";
 
 
 interface FloatingBarPlotProps {
@@ -40,7 +40,10 @@ class FloatingBarPlotUI extends React.Component<FloatingBarPlotProps, FloatingBa
             x: _.map(items, i => i.length),
             y: _.map(items, i => i.name),
             text: _.map(items, i => i.hoverText),
-            orientation: 'h'
+            orientation: 'h',
+            marker: {
+                color: _.map(items, i => i.cnvType === CnvType.DELETION ? 'rgb(254, 127, 40)' : 'rgb(38, 120, 178)')
+            }
         }
     }
 
