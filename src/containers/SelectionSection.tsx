@@ -4,8 +4,7 @@ import {RootState} from "../reducers";
 import {connect} from "react-redux";
 import {RangeSelector} from "../components/RangeSelector";
 import {Col, Row} from "react-bootstrap";
-import {DataTrackSelector} from "../components/DataTrackSelector";
-import {ChromosomeSelector} from "../components/ChromosomeSelector";
+import {StringValueSelector} from "../components/StringValueSelector";
 import {dataContainer} from "./App";
 
 interface SelectionSectionDataProps {
@@ -36,18 +35,20 @@ class SelectionSectionUI extends React.Component<SelectionSectionProps, {}> {
         return [
             <Row key={0} style={{marginBottom: 30}}>
                 <Col xs={2} md={2} style={{verticalAlign: 'center', textAlign: 'right', fontSize: 16, marginTop: 5}}>
-                    Select chromosome
-                </Col>
-                <Col xs={4} md={4}>
-                    <ChromosomeSelector selectedChromosome={selectedChromosome}
-                                        chromosomes={chromosomes}
-                                        onChange={onChangeChromosome}/>
-                </Col>
-                <Col xs={2} md={2} style={{verticalAlign: 'center', textAlign: 'right', fontSize: 16, marginTop: 5}}>
                     Select data track
                 </Col>
                 <Col xs={4} md={4}>
-                    <DataTrackSelector tracks={tracks} selectedTrack={selectedTrack} onChange={onChangeTrack}/>
+                    <StringValueSelector values={tracks}
+                                         selectedValue={selectedTrack}
+                                         onChange={onChangeTrack}/>
+                </Col>
+                <Col xs={2} md={2} style={{verticalAlign: 'center', textAlign: 'right', fontSize: 16, marginTop: 5}}>
+                    Select chromosome
+                </Col>
+                <Col xs={4} md={4}>
+                    <StringValueSelector selectedValue={selectedChromosome}
+                                         values={chromosomes}
+                                         onChange={onChangeChromosome}/>
                 </Col>
             </Row>,
             <RangeSelector key={1}

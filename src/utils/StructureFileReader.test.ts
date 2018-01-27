@@ -14,10 +14,10 @@ test("read file lines", () => {
     txtReader.getStructureRows().then(rows => {
         expect(rows).toHaveLength(2);
         expect(rows[0].chromosome).toBe("chr1");
-        expect(rows[0].name).toBe("NR_046018.2");
+        expect(rows[0].geneName).toBe("DDX11L1");
         expect(rows[0].exons).toHaveLength(3);
         expect(rows[1].chromosome).toBe("chr1");
-        expect(rows[1].name).toBe("NR_024540.1");
+        expect(rows[1].geneName).toBe("WASH7P");
         expect(rows[1].exons).toHaveLength(11);
     });
 });

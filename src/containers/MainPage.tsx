@@ -10,10 +10,13 @@ import {dataContainer} from "./App";
 import {ExonDeletionsDuplications} from "../model/ExonDeletionsDuplications";
 import {CnvRow} from "../utils/CnvFileReader";
 import {SelectionSection} from "./SelectionSection";
+import {GenePlot} from "../components/GenePlot";
+import {GeneDescription} from "../model/GeneDescription";
 
 interface MainPageDataProps {
     rows: CnvRow[];
     deletionsDuplications: ExonDeletionsDuplications[];
+    genes: GeneDescription[];
     startPosition: number;
     endPosition: number;
     selectedChromosome: string;
@@ -31,7 +34,7 @@ interface MainPageState {}
 export class MainPageUI extends React.Component<MainPageProps, MainPageState> {
     render() {
         const {
-            rows, startPosition, endPosition, deletionsDuplications, onRowClicked
+            rows, startPosition, endPosition, deletionsDuplications, onRowClicked, genes
         } = this.props;
         const filteredCnvRows = this.getFilteredCnvRows();
         return <Grid style={{paddingBottom: 30}}>
@@ -40,6 +43,11 @@ export class MainPageUI extends React.Component<MainPageProps, MainPageState> {
                 <FloatingBarPlot data={filteredCnvRows}
                                  startPosition={startPosition}
                                  endPosition={endPosition}/>
+            </Row>
+            <Row>
+                <GenePlot data={genes}
+                startPosition={startPosition}
+                endPosition={endPosition}/>
             </Row>
             <Row>
                 <BarPlot data={deletionsDuplications}
@@ -75,6 +83,7 @@ function mapStateToProps(state: RootState): MainPageDataProps {
     const deletionsDuplications = dataContainer.getDeletionsDuplications(selTrack, selChromosome, start, end);
     return {
         rows: dataContainer.cnvRows,
+        genes: dataContainer.getGenes(selChromosome, start, end),
         startPosition: start,
         endPosition: end,
         selectedChromosome: selChromosome,

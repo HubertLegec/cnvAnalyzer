@@ -10,7 +10,9 @@ export interface ExonDef {
 
 export interface StructureRow {
     chromosome: string;
-    name: string;
+    geneName: string;
+    start: number;
+    end: number;
     exons: ExonDef[];
 }
 
@@ -33,7 +35,9 @@ export class StructureFileReader extends TxtFileReader {
         const splitRow = _.split(row, "\t");
         return {
             chromosome: splitRow[2],
-            name: splitRow[1],
+            geneName: splitRow[12],
+            start: _.toInteger(splitRow[4]),
+            end: _.toInteger(splitRow[5]),
             exons: this.mapToExons(splitRow[9], splitRow[10], splitRow[2])
         }
     }

@@ -2,6 +2,7 @@ import {ExonDef, StructureRow} from "../utils/StructureFileReader";
 import {CnvRow, CnvType} from "../utils/CnvFileReader";
 import {ExonDeletionsDuplications} from "./ExonDeletionsDuplications";
 import * as _ from "lodash";
+import {GeneDescription} from "./GeneDescription";
 
 export class DataContainer {
     private structureRowsData: { [key: string]: StructureRow[] };
@@ -24,6 +25,14 @@ export class DataContainer {
         return DataContainer.getCnvsRangeForRows(rows);
     }
 
+    getGenes(chromosome: string, minPos: number, maxPos: number): GeneDescription[] {
+        const strRows = this.getStructureRows(chromosome);
+        return _.chain(strRows)
+            .filter(g => g.start <= maxPos && g.end >= minPos)
+            .map(g => new GeneDescription(g.geneName, g.start, g.end))
+            .value();
+    }
+
     static getCnvsRangeForRows(rows: CnvRow[]): { min: number, max: number } {
         const min = _(rows)
             .map(r => r.start)
@@ -39,11 +48,11 @@ export class DataContainer {
         return this.calculateDeletionsAndDuplications(cnvs, chromosome, minPos, maxPos);
     }
 
-    public setStructureRows(structureRows: StructureRow[]) {
+    setStructureRows(structureRows: StructureRow[]) {
         this.structureRowsData = _.groupBy(structureRows, r => r.chromosome);
     }
 
-    public addCnvRows(cnvRows: CnvRow[], track: string) {
+    addCnvRows(cnvRows: CnvRow[], track: string) {
         this.cnvRowsData[track] = cnvRows;
         this.reloadAvailableChromosomes();
     }

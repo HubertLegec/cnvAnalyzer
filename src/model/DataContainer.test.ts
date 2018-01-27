@@ -1,19 +1,23 @@
 import * as _ from "lodash";
-import {ExonDef, StructureRow} from "../utils/StructureFileReader";
+import {StructureRow} from "../utils/StructureFileReader";
 import {CnvRow, CnvType} from "../utils/CnvFileReader";
 import {DataContainer} from "./DataContainer";
 import {ExonDeletionsDuplications} from "./ExonDeletionsDuplications";
 
 const structRows: StructureRow[] = [{
     chromosome: "chr1",
-    name: "n1",
+    geneName: "n1",
+    start: 100,
+    end: 400,
     exons: [
         {chromosome: "chr1", start: 100, end: 200},
         {chromosome: "chr1", start: 290, end: 400}
     ]
 }, {
     chromosome: "chr1",
-    name: "n2",
+    geneName: "n2",
+    start: 600,
+    end: 2000,
     exons: [
         {chromosome: "chr1", start: 600, end: 900},
         {chromosome: "chr1", start: 1200, end: 1450},
@@ -21,7 +25,9 @@ const structRows: StructureRow[] = [{
     ]
 }, {
     chromosome: "chr2",
-    name: "n3",
+    geneName: "n3",
+    start: 400,
+    end: 1000,
     exons: [
         {chromosome: "chr2", start: 400, end: 1000}
     ]
@@ -103,14 +109,18 @@ test("get cnv range", () => {
 
 const delDuplStructRows: StructureRow[] = [{
     chromosome: "chr1",
-    name: "n1",
+    geneName: "n1",
+    start: 100,
+    end: 400,
     exons: [
         {chromosome: "chr1", start: 100, end: 200},
         {chromosome: "chr1", start: 290, end: 400}
     ]
 }, {
     chromosome: "chr1",
-    name: "n2",
+    geneName: "n2",
+    start: 100,
+    end: 2000,
     exons: [
         {chromosome: "chr1", start: 100, end: 210},
         {chromosome: "chr1", start: 1200, end: 1450},
@@ -118,7 +128,9 @@ const delDuplStructRows: StructureRow[] = [{
     ]
 }, {
     chromosome: "chr2",
-    name: "n3",
+    geneName: "n3",
+    start: 400,
+    end: 1000,
     exons: [
         {chromosome: "chr2", start: 400, end: 1000}
     ]

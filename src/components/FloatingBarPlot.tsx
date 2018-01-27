@@ -1,7 +1,7 @@
 import * as _ from "lodash";
 import * as React from "react";
-import * as Plot from "react-plotly.js"
-import * as Dimensions from 'react-dimensions'
+import * as Plot from "react-plotly.js";
+import * as Dimensions from 'react-dimensions';
 import {FloatingBarPlotDataItem} from "../model/FloatingBarPlotDataItem";
 import {CnvRow, CnvType} from "../utils/CnvFileReader";
 

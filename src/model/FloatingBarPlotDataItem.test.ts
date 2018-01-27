@@ -16,5 +16,5 @@ test("floating bar plot data item is created correctly", () => {
     expect(floatingBarPlotDataItem.name).toBe("n1");
     expect(floatingBarPlotDataItem.start).toBe(200);
     expect(floatingBarPlotDataItem.length).toBe(600);
-    expect(floatingBarPlotDataItem.hoverText).toBe("Start position: 200<br>End position: 800");
+    expect(floatingBarPlotDataItem.hoverText).toBe("Type: Deletion<br>Start position: 200<br>End position: 800");
 });
